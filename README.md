@@ -35,3 +35,7 @@ yarn add file-loader -D
 ```
 yarn add @babel/plugin-proposal-class-properties -D
 ```
+
+```
+yarn add prop-types
+```

@@ -1,10 +1,25 @@
 import React, { Component } from 'react';
-
+import TechItem from './TechItem';
 class TechList extends Component {
   state = {
     newTech: '',
-    techs: ['Node.js', 'Flask', 'Python', 'ReactJS', 'React Native']
+    techs: []
   };
+  // executado assim que o componente aparece em tela
+  componentDidMount() {
+    const tech = localStorage.getItem('techs');
+    if (tech) {
+      this.setState({ techs: JSON.parse(tech) });
+    }
+  }
+  // executado sempre que houver alterações nas props ou estado
+  componentDidUpdate(prevProps /*ou _ se nao estiver utilizando*/, prevState) {
+    if (prevState.techs !== this.state.techs) {
+      localStorage.setItem('techs', JSON.stringify(this.state.techs));
+    }
+  }
+  // executado quando o componente deixa de existir
+  componentWillUnmount() {}
 
   handleInputChange = e => {
     this.setState({ newTech: e.target.value });
@@ -18,14 +33,19 @@ class TechList extends Component {
     });
   };
 
+  handleDelete = tech => {
+    this.setState({ techs: this.state.techs.filter(te => te !== tech) });
+  };
   render() {
-    console.log(this.state);
     return (
       <form onSubmit={this.handleSubmit}>
         <ul>
-          <h1>{this.state.newTech}</h1>
           {this.state.techs.map(tech => (
-            <li key={tech}>{tech}</li>
+            <TechItem
+              key={tech}
+              tech={tech}
+              onDelete={() => this.handleDelete(tech)}
+            />
           ))}
         </ul>
         <input
